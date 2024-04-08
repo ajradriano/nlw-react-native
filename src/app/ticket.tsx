@@ -1,4 +1,4 @@
-import { StatusBar, View, ScrollView, TouchableOpacity, Text, Alert, Modal, Share } from "react-native";
+import { StatusBar, View, ScrollView, TouchableOpacity, Text, Alert, Modal, Share, useWindowDimensions } from "react-native";
 import { useState } from "react";
 import Header from "./header";
 import { Credential } from "@/components/credential";
@@ -10,11 +10,13 @@ import * as ImagePicker from "expo-image-picker";
 import { QRCode } from "@/components/qrcode";
 import { useBadgeStorage } from "@/storage/badge-storage";
 import { Redirect } from "expo-router";
+import { MotiView } from "moti";
 
 export default function Ticket() {
 
     const [expandQRCode, setExpandQRCode] = useState(false)
     const badgeStorage = useBadgeStorage()
+    const { height} = useWindowDimensions()
 
     async function share() {
         try {
@@ -23,7 +25,7 @@ export default function Ticket() {
                     message: badgeStorage.data.checkInURL
                 })
             }
-            
+
         } catch (error) {
             console.log(error)
             Alert.alert('Erro', 'Não foi possível compartilhar')
@@ -61,16 +63,29 @@ export default function Ticket() {
                     data={badgeStorage.data}
                     onChangePhoto={handleSelectImage}
                     onExpandQRCode={() => setExpandQRCode(true)} />
-                <View className="mt-6">
+                <MotiView
+                    from={{
+                        opacity: 0,
+                        translateY: height * 2
+                    }}
+                    animate={{
+                        opacity: 1,
+                        translateY: 0
+                    }}
+                    transition={{
+                        type:'timing',
+                        duration: 3000
+                    }}
+                    className="mt-6">
                     <Button title="Compartilhar" onPress={share} />
-                </View>
-                <View className="w-20 mt-6 self-center">
-                    <TouchableOpacity
-                        activeOpacity={.7}
-                        onPress={() => badgeStorage.remove()}>
-                        <Text className="text-zinc-400 self-center"> Sair</Text>
-                    </TouchableOpacity>
-                </View>
+                    <View className="w-20 mt-6 self-center">
+                        <TouchableOpacity
+                            activeOpacity={.7}
+                            onPress={() => badgeStorage.remove()}>
+                            <Text className="text-zinc-400 self-center"> Sair</Text>
+                        </TouchableOpacity>
+                    </View>
+                </MotiView>
 
             </ScrollView>
             <Modal visible={expandQRCode} statusBarTranslucent>

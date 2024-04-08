@@ -18,7 +18,7 @@ export function Credential({
     onChangePhoto,
     onExpandQRCode
 }: Props) {
-    const {height} = useWindowDimensions()
+    const { height } = useWindowDimensions()
     return (
         <MotiView
             from={{
@@ -32,7 +32,7 @@ export function Credential({
             }}
             transition={{
                 type: "spring",
-                damping: 30
+                damping: 40
             }}
             className="w-full self-stretch items-center">
             <Image source={require('@/assets/ticket/band.png')} className="w-24 h-52 z-10" />
@@ -70,7 +70,20 @@ export function Credential({
                 <TouchableOpacity activeOpacity={.8} className="my-6" onPress={onExpandQRCode}>
                     <View className="my-6 flex items-center justify-center content-center">
                         <QRCode value={data.checkInURL} size={100} />
-                        <Text className="font-bold text-zinc-400 mt-2">Ampliar</Text>
+                        <MotiView
+                            from={{
+                                scale: 0.95
+                            }}
+                            animate={{
+                                scale: 1
+                            }}
+                            transition={{
+                                loop: true,
+                                type: "timing",
+                                duration: 1000
+                            }}>
+                            <Text className="font-bold text-zinc-400 mt-2">Ampliar</Text>
+                        </MotiView>
                     </View>
                 </TouchableOpacity>
             </View>
